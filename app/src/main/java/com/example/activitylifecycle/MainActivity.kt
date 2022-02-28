@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.activitylifecycle.mymodels.MyData
 
@@ -22,20 +23,33 @@ class MainActivity : AppCompatActivity() {
         myValue = ViewModelProvider(this).get(MyData::class.java)
 
         var btn: Button = findViewById(R.id.btnOk)
-        var tv : TextView = findViewById(R.id.textView)
+        var tvName : TextView = findViewById(R.id.tvName)
+        var tvAge : TextView = findViewById(R.id.tvAge)
+
+        myValue.name.observe(this, Observer {
+            newName -> tvName.text = newName
+        })
+        myValue.age.observe(this, Observer {
+            newAge -> tvAge.text = newAge.toString()
+        })
 
 //        if (savedInstanceState != null) {
 //            tv.text = savedInstanceState.getString("value").toString()
 //        }
-        if (myValue.name != "") {
-            tv.text = myValue.name
+        if (myValue.name.value != "") {
+            //display()
         }
 
         btn.setOnClickListener {
-            myValue.name = "John"
-            myValue.age = 21
-            tv.text = myValue.name
+            myValue.name.value = "John"
+            myValue.age.value = 21
+            //display()
         }
+    }
+
+    fun display() {
+        var tv : TextView = findViewById(R.id.tvName)
+        tv.text = myValue.name.value
     }
 
 //    override fun onSaveInstanceState(outState: Bundle) {
